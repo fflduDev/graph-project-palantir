@@ -3,14 +3,13 @@ package graph_template;
 
 import java.util.ArrayList;
 import java.util.List;
- 
 
 public class ListBasedDiGraph implements DiGraph {
 	private List<GraphNode> nodeList = new ArrayList<>();
 
 	@Override
 	public Boolean addNode(GraphNode node) {
-		
+
 		nodeList.add(node);
 		return true;
 	}
@@ -36,15 +35,15 @@ public class ListBasedDiGraph implements DiGraph {
 	@Override
 	public Boolean addEdge(GraphNode fromNode, GraphNode toNode, Integer weight) {
 
-		//BAD
+		// BAD
 		fromNode.addNeighbor(toNode, weight);
-		
-		//GOOD
+
+		// GOOD
 		GraphNode targetFromNode = getNode(fromNode.getValue());
 		GraphNode targetToNode = getNode(toNode.getValue());
-	 	 
+
 		targetFromNode.addNeighbor(targetToNode, weight);
-	
+
 		return true;
 	}
 
@@ -96,7 +95,7 @@ public class ListBasedDiGraph implements DiGraph {
 	}
 
 	@Override
-	 
+
 	public GraphNode getNode(String nodeValue) {
 		for (GraphNode thisNode : nodeList) {
 			if (thisNode.getValue().equals(nodeValue))
@@ -117,7 +116,4 @@ public class ListBasedDiGraph implements DiGraph {
 		return 0;
 	}
 
- 
-	 
-	
 }

@@ -80,10 +80,32 @@ public class ListBasedDiGraph implements DiGraph {
 	}
 
 	@Override
-	public Boolean hasCycles() {
-		// TODO Auto-generated method stun
-		return null;
-	}
+    public Boolean hasCycles() {
+        for (GraphNode start : nodeList) {
+           if (cycleCheck(start, start, new ArrayList<>())) {
+              return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean cycleCheck(GraphNode current, GraphNode target, List<GraphNode> visited) {
+       visited.add(current);
+
+        for (GraphNode neighbor : current.getNeighbors()) {
+            if (neighbor.equals(target)) {
+              return true;
+            }
+
+            if (!visited.contains(neighbor)) {
+                if (cycleCheck(neighbor, target, visited)) {
+                   return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
 	@Override
 	public List<GraphNode> getNodes() {

@@ -34,10 +34,6 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean addEdge(GraphNode fromNode, GraphNode toNode, Integer weight) {
-
-		// BAD
-		fromNode.addNeighbor(toNode, weight);
-
 		// GOOD
 		GraphNode targetFromNode = getNode(fromNode.getValue());
 		GraphNode targetToNode = getNode(toNode.getValue());
@@ -85,7 +81,7 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean hasCycles() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stun
 		return null;
 	}
 
@@ -107,7 +103,42 @@ public class ListBasedDiGraph implements DiGraph {
 	@Override
 	public int fewestHops(GraphNode fromNode, GraphNode toNode) {
 		// TODO Auto-generated method stub
-		return 0;
+		GraphNode start = getNode(fromNode.getValue());
+		GraphNode target = getNode(toNode.getValue());
+
+		if (start == null || target == null) {
+			return -1;
+		}
+
+		if (start.equals(target)) {
+			return 0;
+		}
+
+		List<GraphNode> visited = new ArrayList<>();
+		List<GraphNode> toVisit = new ArrayList<>();
+		List<Integer> hops = new ArrayList<>();
+
+		toVisit.add(start);
+		hops.add(0);
+
+		while (!toVisit.isEmpty()) {
+			GraphNode current = toVisit.remove(0);
+			int currHops = hops.remove(0);
+
+			if (current.equals(target)) {
+				return currHops;
+			}
+
+			visited.add(current);
+
+			for (GraphNode neighbor : current.getNeighbors()) {
+				if (!visited.contains(neighbor) && !toVisit.contains(neighbor)) {
+					toVisit.add(neighbor);
+					hops.add(currHops + 1);
+				}
+			}
+		}
+		return -1;
 	}
 
 	@Override

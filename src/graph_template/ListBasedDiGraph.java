@@ -7,6 +7,7 @@ import java.util.List;
 public class ListBasedDiGraph implements DiGraph {
 	private List<GraphNode> nodeList = new ArrayList<>();
 
+	// done
 	@Override
 	public Boolean addNode(GraphNode node) {
 
@@ -14,6 +15,7 @@ public class ListBasedDiGraph implements DiGraph {
 		return true;
 	}
 
+	// done
 	@Override
 	public Boolean removeNode(GraphNode node) {
 		if (node == null || node.getValue() == null)
@@ -23,15 +25,14 @@ public class ListBasedDiGraph implements DiGraph {
 		if (target == null)
 			return false;
 
-		// Removes any incoming edges to this node from other nodes
 		for (GraphNode thisNode : nodeList) {
 			thisNode.removeNeighbor(target);
 		}
 
-		// Remove the node itself from the graph
 		return nodeList.remove(target);
 	}
 
+	// done
 	@Override
 	public Boolean setNodeValue(GraphNode node, String newNodeValue) {
 		if (node == null || node.getValue() == null || newNodeValue == null)
@@ -41,11 +42,9 @@ public class ListBasedDiGraph implements DiGraph {
 		if (target == null)
 			return false;
 
-		// If the value is unchanged do zilch
 		if (target.getValue().equals(newNodeValue))
 			return true;
 
-		// Prevents duplicate node values
 		GraphNode existing = getNode(newNodeValue);
 		if (existing != null)
 			return false;
@@ -54,15 +53,19 @@ public class ListBasedDiGraph implements DiGraph {
 		return true;
 	}
 
+	// done
 	@Override
 	public String getNodeValue(GraphNode node) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode target = getNode(node.getValue());
+		if (target == null)
+			return null;
+
+		return target.getValue();
 	}
 
+	// done
 	@Override
 	public Boolean addEdge(GraphNode fromNode, GraphNode toNode, Integer weight) {
-		// GOOD
 		GraphNode targetFromNode = getNode(fromNode.getValue());
 		GraphNode targetToNode = getNode(toNode.getValue());
 
@@ -71,10 +74,13 @@ public class ListBasedDiGraph implements DiGraph {
 		return true;
 	}
 
+	// done
 	@Override
 	public Boolean removeEdge(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode targetFromNode = getNode(fromNode.getValue());
+		GraphNode targetToNode = getNode(toNode.getValue());
+
+		return targetFromNode.removeNeighbor(targetToNode);
 	}
 
 	@Override
@@ -107,39 +113,43 @@ public class ListBasedDiGraph implements DiGraph {
 		return null;
 	}
 
+	// done
 	@Override
-    public Boolean hasCycles() {
-        for (GraphNode start : nodeList) {
-           if (cycleCheck(start, start, new ArrayList<>())) {
-              return true;
-            }
-        }
-        return false;
-    }
+	public Boolean hasCycles() {
+		for (GraphNode start : nodeList) {
+			if (cycleCheck(start, start, new ArrayList<>())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    private Boolean cycleCheck(GraphNode current, GraphNode target, List<GraphNode> visited) {
-       visited.add(current);
+	// done
+	private Boolean cycleCheck(GraphNode current, GraphNode target, List<GraphNode> visited) {
+		visited.add(current);
 
-        for (GraphNode neighbor : current.getNeighbors()) {
-            if (neighbor.equals(target)) {
-              return true;
-            }
+		for (GraphNode neighbor : current.getNeighbors()) {
+			if (neighbor.equals(target)) {
+				return true;
+			}
 
-            if (!visited.contains(neighbor)) {
-                if (cycleCheck(neighbor, target, visited)) {
-                   return true;
-                }
-            }
-        }
+			if (!visited.contains(neighbor)) {
+				if (cycleCheck(neighbor, target, visited)) {
+					return true;
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
+	// done
 	@Override
 	public List<GraphNode> getNodes() {
 		return nodeList;
 	}
 
+	// done
 	@Override
 
 	public GraphNode getNode(String nodeValue) {
@@ -150,6 +160,7 @@ public class ListBasedDiGraph implements DiGraph {
 		return null;
 	}
 
+	// done
 	@Override
 	public int fewestHops(GraphNode fromNode, GraphNode toNode) {
 		// TODO Auto-generated method stub

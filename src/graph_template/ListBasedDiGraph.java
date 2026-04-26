@@ -16,14 +16,42 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean removeNode(GraphNode node) {
-		// TODO Auto-generated method stub
-		return null;
+		if (node == null || node.getValue() == null)
+			return false;
+
+		GraphNode target = getNode(node.getValue());
+		if (target == null)
+			return false;
+
+		// Removes any incoming edges to this node from other nodes
+		for (GraphNode thisNode : nodeList) {
+			thisNode.removeNeighbor(target);
+		}
+
+		// Remove the node itself from the graph
+		return nodeList.remove(target);
 	}
 
 	@Override
 	public Boolean setNodeValue(GraphNode node, String newNodeValue) {
-		// TODO Auto-generated method stub
-		return null;
+		if (node == null || node.getValue() == null || newNodeValue == null)
+			return false;
+
+		GraphNode target = getNode(node.getValue());
+		if (target == null)
+			return false;
+
+		// If the value is unchanged do zilch
+		if (target.getValue().equals(newNodeValue))
+			return true;
+
+		// Prevents duplicate node values
+		GraphNode existing = getNode(newNodeValue);
+		if (existing != null)
+			return false;
+
+		target.setValue(newNodeValue);
+		return true;
 	}
 
 	@Override

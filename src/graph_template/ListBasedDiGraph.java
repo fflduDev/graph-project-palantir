@@ -101,10 +101,16 @@ public class ListBasedDiGraph implements DiGraph {
 		return null;
 	}
 
+	// done
 	@Override
 	public Boolean nodesAreAdjacent(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode from = getNode(fromNode.getValue());
+		GraphNode to = getNode(toNode.getValue());
+		if (from == null || to == null) {
+			return false;
+		}
+
+		return from.getDistanceToNeighbor(to) != null;
 	}
 
 	@Override
@@ -202,10 +208,55 @@ public class ListBasedDiGraph implements DiGraph {
 		return -1;
 	}
 
+	// done
 	@Override
 	public int shortestPath(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+		GraphNode start = getNode(fromNode.getValue());
+		GraphNode target = getNode(toNode.getValue());
 
+		if (start == null || target == null) {
+			return -1;
+		}
+
+		List<GraphNode> unvisited = new ArrayList<>(nodeList);
+		List<Integer> distances = new ArrayList<>();
+		for (GraphNode node : nodeList) {
+			if (node.equals(start)) {
+				distances.add(0);
+			} else {
+				distances.add(Integer.MAX_VALUE);
+			}
+		}
+
+		while (!unvisited.isEmpty()) {
+			int minIndex = -1;
+			int minDistance = Integer.MAX_VALUE;
+
+			for (int i = 0; i < nodeList.size(); i++) {
+				if (unvisited.contains(nodeList.get(i)) && distances.get(i) < minDistance) {
+					minDistance = distances.get(i);
+					minIndex = i;
+				}
+			}
+
+			if (minIndex == -1) {
+				break;
+			}
+
+			GraphNode current = nodeList.get(minIndex);
+			unvisited.remove(current);
+
+			for (GraphNode neighbor : current.getNeighbors()) {
+				int neighborIndex = nodeList.indexOf(neighbor);
+				int newDist = distances.get(minIndex) + current.getDistanceToNeighbor(neighbor);
+				
+				if (newDist < distances.get(neighborIndex)) {
+					distances.set(neighborIndex, newDist);
+				}
+			}
+		}
+
+		int result = distances.get(nodeList.indexOf(target));
+		return result == Integer.MAX_VALUE ? -1 : result;
+	}
 }

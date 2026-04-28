@@ -1,4 +1,3 @@
-
 package graph_template;
 
 import java.util.ArrayList;
@@ -7,15 +6,12 @@ import java.util.List;
 public class ListBasedDiGraph implements DiGraph {
 	private List<GraphNode> nodeList = new ArrayList<>();
 
-	// done
 	@Override
 	public Boolean addNode(GraphNode node) {
-
 		nodeList.add(node);
 		return true;
 	}
 
-	// done
 	@Override
 	public Boolean removeNode(GraphNode node) {
 		if (node == null || node.getValue() == null)
@@ -32,7 +28,6 @@ public class ListBasedDiGraph implements DiGraph {
 		return nodeList.remove(target);
 	}
 
-	// done
 	@Override
 	public Boolean setNodeValue(GraphNode node, String newNodeValue) {
 		if (node == null || node.getValue() == null || newNodeValue == null)
@@ -53,7 +48,6 @@ public class ListBasedDiGraph implements DiGraph {
 		return true;
 	}
 
-	// done
 	@Override
 	public String getNodeValue(GraphNode node) {
 		GraphNode target = getNode(node.getValue());
@@ -63,7 +57,6 @@ public class ListBasedDiGraph implements DiGraph {
 		return target.getValue();
 	}
 
-	// done
 	@Override
 	public Boolean addEdge(GraphNode fromNode, GraphNode toNode, Integer weight) {
 		GraphNode targetFromNode = getNode(fromNode.getValue());
@@ -74,7 +67,6 @@ public class ListBasedDiGraph implements DiGraph {
 		return true;
 	}
 
-	// done
 	@Override
 	public Boolean removeEdge(GraphNode fromNode, GraphNode toNode) {
 		GraphNode targetFromNode = getNode(fromNode.getValue());
@@ -85,27 +77,47 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean setEdgeValue(GraphNode fromNode, GraphNode toNode, Integer newWeight) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode from = getNode(fromNode.getValue());
+		GraphNode to = getNode(toNode.getValue());
+
+		if (from == null || to == null) {
+			return false;
+		}
+
+		from.removeNeighbor(to);
+		from.addNeighbor(to, newWeight);
+
+		return true;
 	}
 
 	@Override
 	public Integer getEdgeValue(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode from = getNode(fromNode.getValue());
+		GraphNode to = getNode(toNode.getValue());
+
+		if (from == null || to == null) {
+			return null;
+		}
+
+		return from.getDistanceToNeighbor(to);
 	}
 
 	@Override
 	public List<GraphNode> getAdjacentNodes(GraphNode node) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode target = getNode(node.getValue());
+
+		if (target == null) {
+			return null;
+		}
+
+		return target.getNeighbors();
 	}
 
-	// done
 	@Override
 	public Boolean nodesAreAdjacent(GraphNode fromNode, GraphNode toNode) {
 		GraphNode from = getNode(fromNode.getValue());
 		GraphNode to = getNode(toNode.getValue());
+
 		if (from == null || to == null) {
 			return false;
 		}
@@ -115,11 +127,9 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean nodeIsReachable(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return null;
+		return fewestHops(fromNode, toNode) != -1;
 	}
 
-	// done
 	@Override
 	public Boolean hasCycles() {
 		for (GraphNode start : nodeList) {
@@ -130,7 +140,6 @@ public class ListBasedDiGraph implements DiGraph {
 		return false;
 	}
 
-	// done
 	private Boolean cycleCheck(GraphNode current, GraphNode target, List<GraphNode> visited) {
 		visited.add(current);
 
@@ -149,15 +158,12 @@ public class ListBasedDiGraph implements DiGraph {
 		return false;
 	}
 
-	// done
 	@Override
 	public List<GraphNode> getNodes() {
 		return nodeList;
 	}
 
-	// done
 	@Override
-
 	public GraphNode getNode(String nodeValue) {
 		for (GraphNode thisNode : nodeList) {
 			if (thisNode.getValue().equals(nodeValue))
@@ -166,10 +172,8 @@ public class ListBasedDiGraph implements DiGraph {
 		return null;
 	}
 
-	// done
 	@Override
 	public int fewestHops(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
 		GraphNode start = getNode(fromNode.getValue());
 		GraphNode target = getNode(toNode.getValue());
 
@@ -205,10 +209,10 @@ public class ListBasedDiGraph implements DiGraph {
 				}
 			}
 		}
+
 		return -1;
 	}
 
-	// done
 	@Override
 	public int shortestPath(GraphNode fromNode, GraphNode toNode) {
 		GraphNode start = getNode(fromNode.getValue());
@@ -220,6 +224,7 @@ public class ListBasedDiGraph implements DiGraph {
 
 		List<GraphNode> unvisited = new ArrayList<>(nodeList);
 		List<Integer> distances = new ArrayList<>();
+
 		for (GraphNode node : nodeList) {
 			if (node.equals(start)) {
 				distances.add(0);
@@ -249,7 +254,7 @@ public class ListBasedDiGraph implements DiGraph {
 			for (GraphNode neighbor : current.getNeighbors()) {
 				int neighborIndex = nodeList.indexOf(neighbor);
 				int newDist = distances.get(minIndex) + current.getDistanceToNeighbor(neighbor);
-				
+
 				if (newDist < distances.get(neighborIndex)) {
 					distances.set(neighborIndex, newDist);
 				}
